@@ -1,0 +1,38 @@
+# Modelfile for react-testgen
+#
+# Usage:
+#   1. Place react-testgen.gguf in the same directory as this file
+#   2. Run: ollama create react-testgen -f Modelfile
+#   3. Test: ollama run react-testgen "Generate a test for a Button component"
+
+FROM ./react-testgen.gguf
+
+PARAMETER temperature 0.3
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER repeat_penalty 1.1
+PARAMETER num_predict 4096
+PARAMETER stop "<|end|>"
+PARAMETER stop "<|user|>"
+PARAMETER stop "<|system|>"
+
+SYSTEM """You are a React testing expert. You generate comprehensive Jest + React Testing Library test files for React components. Your tests are production-quality, use best practices, and achieve high code coverage.
+
+Rules:
+- Use renderWithProviders from test-utils (wraps all providers + MemoryRouter)
+- Mock framer-motion, lucide-react icons if the component imports them
+- Use screen queries: getByRole, getByText, getByLabelText, getByTestId
+- Use userEvent for interactions (click, type, etc.)
+- Test: rendering, props, user interactions, conditional branches, loading/error states
+- Provide realistic mock data matching TypeScript types
+- Every test must assert something meaningful
+- Use jest.fn() for callback props
+- Use beforeEach with jest.clearAllMocks()
+"""
+
+TEMPLATE """{{ if .System }}<|system|>
+{{ .System }}
+{{ end }}<|user|>
+{{ .Prompt }}
+<|assistant|>
+"""
