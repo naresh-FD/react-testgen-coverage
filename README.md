@@ -7,7 +7,7 @@ Jest + React Testing Library tests with 50%+ coverage.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     TRAINING PHASE (Colab)                  │
+│                 TRAINING PHASE (Local Conda)                │
 │                                                             │
 │  TSX Components ──► AST Analyzer ──► Structured Metadata    │
 │        +                                                    │
@@ -38,7 +38,7 @@ Jest + React Testing Library tests with 50%+ coverage.
 |-------|-----------------------------------------|-------|
 | 1-2   | Write 30-50 manual component→test pairs | 6-8h  |
 | 3     | Run data pipeline, create JSONL dataset | 2-3h  |
-| 4-5   | Fine-tune on Colab (LoRA)               | 3-4h  |
+| 4-5   | Fine-tune locally (LoRA)                | 3-4h  |
 | 6     | Convert to GGUF, test locally           | 2-3h  |
 | 7     | Evaluate, fix bad outputs, retrain      | 3-4h  |
 | 8-10  | Iterate: add more examples, retrain     | 4-6h  |
@@ -61,12 +61,12 @@ node scripts/prepare-data.mjs --src ../expence_manager/src --out data/processed
 # Add your manual examples to data/manual-examples/
 ```
 
-### Step 2: Fine-Tune (Google Colab)
-1. Upload `data/processed/training.jsonl` to Google Drive
-2. Open `training/finetune_colab.ipynb` in Colab
-3. Select GPU runtime (T4 free tier)
-4. Run all cells (~1-2 hours training)
-5. Download the merged GGUF model
+### Step 2: Fine-Tune Locally
+1. Create the local conda environment: `conda env create -f environment.yml`
+2. Activate it: `conda activate react-testgen`
+3. Open `react-testgen-train.ipynb` in VS Code or JupyterLab
+4. Select the `react-testgen` kernel
+5. Run all cells, or use `python training/finetune_local.py --training-file data/processed/training.jsonl`
 
 ### Step 3: Run Locally
 ```bash
@@ -78,23 +78,30 @@ node scripts/generate.mjs --file ../your-project/src/MyComponent.tsx
 node scripts/generate.mjs --dir ../your-project/src/components
 ```
 
-## Colab Workflow
+## Local Workflow
 
-Use the existing `react-testgen-train.ipynb` notebook in Google Colab for training.
+Use the existing `react-testgen-train.ipynb` notebook locally in VS Code or JupyterLab, or use the CLI trainer.
 
 Recommended flow:
 
 - edit locally in VS Code
-- push to GitHub or keep the notebook in Google Drive
-- open `react-testgen-train.ipynb` in Colab
-- select a GPU runtime
-- run the notebook cells to train and export the model
+- activate the `react-testgen` conda environment
+- open `react-testgen-train.ipynb` locally
+- run the notebook cells or `training/finetune_local.py`
+- convert the merged model to GGUF and run it with Ollama
+
+Setup details:
+
+- `environment.yml`
+- `training/LOCAL_SETUP.md`
+- `training/finetune_local.py`
 
 ## Requirements
 
 - Node.js 18+
 - TypeScript (npm install)
-- Google account (for free Colab GPU)
+- Anaconda or Miniconda
+- NVIDIA GPU recommended for local training
 - Ollama (for local inference)
 - ~2GB disk space for the model
 "# react-testgen-coverage" 
