@@ -78,20 +78,17 @@ node scripts/generate.mjs --file ../your-project/src/MyComponent.tsx
 node scripts/generate.mjs --dir ../your-project/src/components
 ```
 
-## Automated Cloud Training
+## Colab Workflow
 
-This repo now includes a GitHub Actions workflow that can submit a Vertex AI GPU fine-tuning job whenever training code or processed datasets change on `main`.
+Use the existing `react-testgen-train.ipynb` notebook in Google Colab for training.
 
-Files:
+Recommended flow:
 
-- `.github/workflows/train-vertex.yml`
-- `training/vertex_train.py`
-- `training/requirements-gpu.txt`
-- `training/VERTEX_SETUP.md`
-
-The workflow uses `google-github-actions/auth` with Workload Identity Federation, then submits a Vertex AI custom job with a prebuilt PyTorch GPU image. Model artifacts are uploaded to a GCS bucket.
-
-Read `training/VERTEX_SETUP.md` for the one-time Google Cloud and GitHub configuration.
+- edit locally in VS Code
+- push to GitHub or keep the notebook in Google Drive
+- open `react-testgen-train.ipynb` in Colab
+- select a GPU runtime
+- run the notebook cells to train and export the model
 
 ## Requirements
 
